@@ -1,9 +1,9 @@
 # Wireguard Conf
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/idkncc/wireguard-conf/build.yml)
-![docs.rs](https://img.shields.io/docsrs/wireguard-conf)
-![Crates.io Version](https://img.shields.io/crates/v/wireguard-conf)
-![Crates.io Total Downloads](https://img.shields.io/crates/d/wireguard-conf)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/idkncc/wireguard-conf/build.yml)](https://github.com/idkncc/wireguard-conf/actions)
+[![docs.rs](https://img.shields.io/docsrs/wireguard-conf)](https://docs.rs/wireguard-conf)
+[![Crates.io Version](https://img.shields.io/crates/v/wireguard-conf)](https://crates.io/crates/wireguard-conf)
+[![Crates.io Total Downloads](https://img.shields.io/crates/d/wireguard-conf)](https://crates.io/crates/wireguard-conf)
 [![Quickstart Tutorial](https://img.shields.io/badge/Quickstart_Tutorial-blue)](./QUICKSTART.md)
 
 Easy to use library for creating wireguard configs.
@@ -57,7 +57,7 @@ println!("{}", peer.to_interface(&interface, ToInterfaceOptions::new()).unwrap()
    Or start nix shell: `direnv allow` or just `nix develop`
 3. Make changes
 4. Format and lint code:
-   ```
+   ```shell
    just fmt
    just lint
    # or fix automatically: just lint-fix
