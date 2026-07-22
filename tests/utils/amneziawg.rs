@@ -12,7 +12,7 @@ fn random() {
 fn validate_jc() {
     let mut settings = AmneziaSettings::random();
 
-    settings.jc = 9999;
+    settings.jc = Some(11);
 
     assert_eq!(
         settings.validate(),
@@ -24,9 +24,13 @@ fn validate_jc() {
 fn validate_jmin() {
     let mut settings = AmneziaSettings::random();
 
-    settings.jmin = 100;
-    settings.jmax = 50;
+    settings.jmin = Some(63);
+    assert_eq!(
+        settings.validate(),
+        Err(WireguardError::InvalidAmneziaSetting("Jmin".to_string()))
+    );
 
+    settings.jmin = Some(1025);
     assert_eq!(
         settings.validate(),
         Err(WireguardError::InvalidAmneziaSetting("Jmin".to_string()))
@@ -37,8 +41,13 @@ fn validate_jmin() {
 fn validate_jmax() {
     let mut settings = AmneziaSettings::random();
 
-    settings.jmax = 9999;
+    settings.jmax = Some(63);
+    assert_eq!(
+        settings.validate(),
+        Err(WireguardError::InvalidAmneziaSetting("Jmax".to_string()))
+    );
 
+    settings.jmax = Some(1025);
     assert_eq!(
         settings.validate(),
         Err(WireguardError::InvalidAmneziaSetting("Jmax".to_string()))
@@ -46,18 +55,25 @@ fn validate_jmax() {
 }
 
 #[test]
+fn validate_jmin_jmax() {
+    let mut settings = AmneziaSettings::random();
+
+    settings.jmin = Some(100);
+    settings.jmax = Some(64);
+
+    assert_eq!(
+        settings.validate(),
+        Err(WireguardError::InvalidAmneziaSetting(
+            "Jmin >= Jmax".to_string()
+        ))
+    );
+}
+
+#[test]
 fn validate_s1() {
     let mut settings = AmneziaSettings::random();
 
-    settings.s1 = 9999;
-    assert_eq!(
-        settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting("S1".to_string()))
-    );
-
-    // s1 + 56 != s2
-    settings.s1 = 100;
-    settings.s2 = 156;
+    settings.s1 = Some(65);
     assert_eq!(
         settings.validate(),
         Err(WireguardError::InvalidAmneziaSetting("S1".to_string()))
@@ -68,7 +84,7 @@ fn validate_s1() {
 fn validate_s2() {
     let mut settings = AmneziaSettings::random();
 
-    settings.s2 = 9999;
+    settings.s2 = Some(65);
     assert_eq!(
         settings.validate(),
         Err(WireguardError::InvalidAmneziaSetting("S2".to_string()))
@@ -76,17 +92,83 @@ fn validate_s2() {
 }
 
 #[test]
-fn validate_h1_h2_h3_h4() {
+fn validate_s3() {
     let mut settings = AmneziaSettings::random();
 
-    settings.h1 = 1111; // same
-    settings.h2 = 1111; // same
-    settings.h3 = 3333;
-    settings.h4 = 4444;
+    settings.s3 = Some(65);
+    assert_eq!(
+        settings.validate(),
+        Err(WireguardError::InvalidAmneziaSetting("S3".to_string()))
+    );
+}
+
+#[test]
+fn validate_s4() {
+    let mut settings = AmneziaSettings::random();
+
+    settings.s4 = Some(33);
+    assert_eq!(
+        settings.validate(),
+        Err(WireguardError::InvalidAmneziaSetting("S4".to_string()))
+    );
+}
+
+#[test]
+fn validate_h1() {
+    let mut settings = AmneziaSettings::builder().build().unwrap();
+
+    settings.h1 = Some(HRange::new(200, 100));
+    assert_eq!(
+        settings.validate(),
+        Err(WireguardError::InvalidAmneziaSetting("H1".to_string()))
+    );
+}
+
+#[test]
+fn validate_h2() {
+    let mut settings = AmneziaSettings::builder().build().unwrap();
+
+    settings.h2 = Some(HRange::new(200, 100));
+    assert_eq!(
+        settings.validate(),
+        Err(WireguardError::InvalidAmneziaSetting("H2".to_string()))
+    );
+}
+
+#[test]
+fn validate_h3() {
+    let mut settings = AmneziaSettings::builder().build().unwrap();
+
+    settings.h3 = Some(HRange::new(200, 100));
+    assert_eq!(
+        settings.validate(),
+        Err(WireguardError::InvalidAmneziaSetting("H3".to_string()))
+    );
+}
+
+#[test]
+fn validate_h4() {
+    let mut settings = AmneziaSettings::builder().build().unwrap();
+
+    settings.h4 = Some(HRange::new(200, 100));
+    assert_eq!(
+        settings.validate(),
+        Err(WireguardError::InvalidAmneziaSetting("H4".to_string()))
+    );
+}
+
+#[test]
+fn validate_h_overlap() {
+    let mut settings = AmneziaSettings::random();
+
+    settings.h1 = Some(HRange::new(1000, 2000));
+    settings.h2 = Some(HRange::new(1500, 5000));
+    settings.h3 = Some(HRange::new(5000, 7000));
+    settings.h4 = Some(HRange::new(8000, 9000));
     assert_eq!(
         settings.validate(),
         Err(WireguardError::InvalidAmneziaSetting(
-            "H1/H2/H3/H4".to_string()
+            "H ranges overlap".to_string()
         ))
     );
 }

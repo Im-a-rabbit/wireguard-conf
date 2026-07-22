@@ -21,6 +21,10 @@ pub struct ToInterfaceOptions {
 
     /// Option, for setting persistent keepalive to client's peer.
     persistent_keepalive: u16,
+
+    /// Option for removing server-only AmneziaWG fields from the generated interface.
+    #[cfg(feature = "amneziawg")]
+    strip_server_data: bool,
 }
 
 impl ToInterfaceOptions {
@@ -44,6 +48,14 @@ impl ToInterfaceOptions {
     #[must_use]
     pub fn persistent_keepalive(mut self, value: u16) -> Self {
         self.persistent_keepalive = value;
+        self
+    }
+
+    /// Removes server-only AmneziaWG settings from the generated interface.
+    #[must_use]
+    #[cfg(feature = "amneziawg")]
+    pub fn strip_server_data(mut self, value: bool) -> Self {
+        self.strip_server_data = value;
         self
     }
 }
@@ -229,6 +241,13 @@ impl Peer {
 
         if options.persistent_keepalive != 0 {
             client_interface.peers[0].persistent_keepalive = options.persistent_keepalive;
+        }
+
+        #[cfg(feature = "amneziawg")]
+        if options.strip_server_data
+            && let Some(settings) = &mut client_interface.amnezia_settings
+        {
+            settings.strip_server_data();
         }
 
         Ok(client_interface)

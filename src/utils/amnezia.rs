@@ -1,5 +1,6 @@
+use derive_builder::Builder;
 use rand::prelude::*;
-use std::{collections::HashSet, fmt};
+use std::{convert::Infallible, fmt};
 
 #[cfg(feature = "serde")]
 #[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
@@ -15,33 +16,100 @@ macro_rules! assert_return {
     };
 }
 
+/// Inclusive range of H values used by AmneziaWG 2.0.
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
+pub struct HRange {
+    min: u32,
+    max: u32,
+}
+
+impl HRange {
+    /// Create new [`HRange`].
+    #[must_use]
+    pub fn new(min: u32, max: u32) -> Self {
+        Self { min, max }
+    }
+}
+
+impl fmt::Display for HRange {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}-{}", self.min, self.max)
+    }
+}
+
 /// AmneziaWG obfuscation values.
 ///
-/// - [Documentation](https://github.com/amnezia-vpn/amneziawg-linux-kernel-module?tab=readme-ov-file#configuration)
+/// - [Documentation](https://docs.amnezia.org/documentation/amnezia-wg)
 #[must_use]
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Builder)]
 #[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
+#[builder(build_fn(private, name = "fallible_build", error = "Infallible"))]
 pub struct AmneziaSettings {
-    /// 1 ≤ Jc ≤ 128; recommended range is from 3 to 10 inclusive
-    pub jc: usize,
-
-    /// Jmin < Jmax; recommended value is 50
-    pub jmin: usize,
-    /// Jmin < Jmax ≤ 1280; recommended value is 1000
-    pub jmax: usize,
-    /// S1 < 1280; S1 + 56 ≠ S2; recommended range is from 15 to 150 inclusive
-    pub s1: usize,
-    /// S2 < 1280; recommended range is from 15 to 150 inclusive
-    pub s2: usize,
-
-    /// must be unique among each other; recommended range is from 5 to 2147483647 inclusive
-    pub h1: usize,
-    /// must be unique among each other; recommended range is from 5 to 2147483647 inclusive
-    pub h2: usize,
-    /// must be unique among each other; recommended range is from 5 to 2147483647 inclusive
-    pub h3: usize,
-    /// must be unique among each other; recommended range is from 5 to 2147483647 inclusive
-    pub h4: usize,
+    /// 0 ≤ Jc ≤ 10
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(strip_option), default)]
+    pub jc: Option<u8>,
+    /// 64 <= Jmin <= Jmax <= 1024
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(strip_option), default)]
+    pub jmin: Option<u16>,
+    /// 64 <= Jmin <= Jmax <= 1024
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(strip_option), default)]
+    pub jmax: Option<u16>,
+    /// 0 <= S1 <= 64
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(strip_option), default)]
+    pub s1: Option<u8>,
+    /// 0 <= S2 <= 64
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(strip_option), default)]
+    pub s2: Option<u8>,
+    /// 0 <= S3 <= 64
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(strip_option), default)]
+    pub s3: Option<u8>,
+    /// 0 <= S4 <= 32
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(strip_option), default)]
+    pub s4: Option<u8>,
+    /// Random header range for Init packets; H1-H4 ranges must not overlap
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(strip_option), default)]
+    pub h1: Option<HRange>,
+    /// Random header range for Init packets; H1-H4 ranges must not overlap
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(strip_option), default)]
+    pub h2: Option<HRange>,
+    /// Random header range for Init packets; H1-H4 ranges must not overlap
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(strip_option), default)]
+    pub h3: Option<HRange>,
+    /// Random header range for Init packets; H1-H4 ranges must not overlap
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(strip_option), default)]
+    pub h4: Option<HRange>,
+    /// Custom protocol signature template.
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(into, strip_option), default)]
+    pub i1: Option<String>,
+    /// Custom protocol signature template.
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(into, strip_option), default)]
+    pub i2: Option<String>,
+    /// Custom protocol signature template.
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(into, strip_option), default)]
+    pub i3: Option<String>,
+    /// Custom protocol signature template.
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(into, strip_option), default)]
+    pub i4: Option<String>,
+    /// Custom protocol signature template.
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    #[builder(setter(into, strip_option), default)]
+    pub i5: Option<String>,
 }
 
 /// Methods
@@ -63,36 +131,36 @@ impl AmneziaSettings {
     pub fn random() -> Self {
         let mut rng = rand::rng();
 
-        let jc = rng.random_range(4..=12);
-        let jmin = 8;
-        let jmax = 80;
-        let s1 = rng.random_range(15..=150);
-        let s2 = {
-            let mut value = s1 + 56;
+        let mut min = rng.random_range(0..=3_000_000);
+        let width = rng.random_range(30_000..=65_535);
+        let h1 = HRange::new(min, min + width);
 
-            while s1 + 56 == value {
-                value = rng.random_range(1..=150);
-            }
+        min += width + rng.random_range(1..=1000);
+        let width = rng.random_range(30_000..=65_535);
+        let h2 = HRange::new(min, min + width);
 
-            value
-        };
+        min += width + rng.random_range(1..=1000);
+        let width = rng.random_range(30_000..=65_535);
+        let h3 = HRange::new(min, min + width);
 
-        let h1 = rng.random_range(10..=2_147_483_640);
-        let h2 = rng.random_range(10..=2_147_483_640);
-        let h3 = rng.random_range(10..=2_147_483_640);
-        let h4 = rng.random_range(10..=2_147_483_640);
-
-        Self {
-            jc,
-            jmin,
-            jmax,
-            s1,
-            s2,
-            h1,
-            h2,
-            h3,
-            h4,
-        }
+        min += width + rng.random_range(1..=1000);
+        let width = rng.random_range(30_000..=65_535);
+        let h4 = HRange::new(min, min + width);
+        AmneziaSettings::builder()
+            .jc(rng.random_range(4..=10))
+            .jmin(rng.random_range(64..256))
+            .jmax(rng.random_range(768..=1024))
+            .s1(rng.random_range(15..=64))
+            .s2(rng.random_range(15..=64))
+            .s3(rng.random_range(15..=64))
+            .s4(rng.random_range(8..=32))
+            .h1(h1)
+            .h2(h2)
+            .h3(h3)
+            .h4(h4)
+            .i1("<r 2><b 0x8580000100010000000004796162730679616e6465780272750000010001c00c000100010000026d000457fa27d1>")
+            .build()
+            .unwrap_or_else(|_| unreachable!())
     }
 
     /// Validates [`AmneziaSettings`].
@@ -102,39 +170,112 @@ impl AmneziaSettings {
     /// If [`AmneziaSettings`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
     /// with setting name
     pub fn validate(&self) -> WireguardResult<()> {
-        assert_return!(
-            1 <= self.jc && self.jc <= 128,
-            WireguardError::InvalidAmneziaSetting("Jc".to_string())
-        );
+        macro_rules! validate_range {
+            ($field:ident in $range:expr, $name:literal) => {
+                if let Some(value) = self.$field {
+                    assert_return!(
+                        $range.contains(&value),
+                        WireguardError::InvalidAmneziaSetting($name.to_string())
+                    );
+                }
+            };
+        }
+        macro_rules! validate {
+            ($field:ident, $name:literal, $expr:expr) => {
+                if let Some($field) = &self.$field {
+                    assert_return!(
+                        $expr,
+                        WireguardError::InvalidAmneziaSetting($name.to_string())
+                    );
+                }
+            };
+        }
 
-        assert_return!(
-            self.jmin < self.jmax,
-            WireguardError::InvalidAmneziaSetting("Jmin".to_string())
-        );
-        assert_return!(
-            self.jmax <= 1280,
-            WireguardError::InvalidAmneziaSetting("Jmax".to_string())
-        );
-        assert_return!(
-            self.s1 < 1280 && self.s1 + 56 != self.s2,
-            WireguardError::InvalidAmneziaSetting("S1".to_string())
-        );
-        assert_return!(
-            self.s2 < 1280,
-            WireguardError::InvalidAmneziaSetting("S2".to_string())
-        );
+        validate_range!(jc in 0..=10, "Jc");
+        validate_range!(jmin in 64..=1024, "Jmin");
+        validate_range!(jmax in 64..=1024, "Jmax");
+        if let (Some(jmin), Some(jmax)) = (self.jmin, self.jmax) {
+            assert_return!(
+                jmin < jmax,
+                WireguardError::InvalidAmneziaSetting("Jmin >= Jmax".to_string())
+            );
+        }
+        validate_range!(s1 in 0..=64, "S1");
+        validate_range!(s2 in 0..=64, "S2");
+        validate_range!(s3 in 0..=64, "S3");
+        validate_range!(s4 in 0..=32, "S4");
+        validate!(h1, "H1", h1.min <= h1.max);
+        validate!(h2, "H2", h2.min <= h2.max);
+        validate!(h3, "H3", h3.min <= h3.max);
+        validate!(h4, "H4", h4.min <= h4.max);
 
-        let are_h_values_unique = {
-            let set = HashSet::from([self.h1, self.h2, self.h3, self.h4]);
-
-            set.len() == 4
-        };
+        let mut ranges: Vec<_> = [&self.h1, &self.h2, &self.h3, &self.h4]
+            .into_iter()
+            .flatten()
+            .collect();
+        ranges.sort();
         assert_return!(
-            are_h_values_unique,
-            WireguardError::InvalidAmneziaSetting("H1/H2/H3/H4".to_string())
+            ranges.windows(2).all(|p| p[0].max < p[1].min),
+            WireguardError::InvalidAmneziaSetting("H ranges overlap".to_string())
         );
 
         Ok(())
+    }
+
+    /// Removes server-only AmneziaWG settings.
+    ///
+    /// This is intended for generating client configuration files, where
+    /// server-specific fields (such as I1-I5) must not be included.
+    pub fn strip_server_data(&mut self) {
+        self.i1 = None;
+        self.i2 = None;
+        self.i3 = None;
+        self.i4 = None;
+        self.i5 = None;
+    }
+
+    /// Create new `AmneziaSettingsBuilder`. Alias for `AmneziaSettingsBuilder::new()`.
+    ///
+    /// ```rust
+    /// # use wireguard_conf::prelude::*;
+    /// #
+    /// let amnezia_settings = AmneziaSettings::builder()
+    ///     .jc(5)
+    ///     // <snip>
+    ///     .build();
+    /// ```
+    #[must_use]
+    pub fn builder() -> AmneziaSettingsBuilder {
+        AmneziaSettingsBuilder::default()
+    }
+}
+
+impl AmneziaSettingsBuilder {
+    /// Create new `AmneziaSettingsBuilder`.
+    ///
+    /// ```rust
+    /// # use wireguard_conf::prelude::*;
+    /// #
+    /// let amnezia_settings = AmneziaSettingsBuilder::new()
+    ///     .jc(5)
+    ///     // <snip>
+    ///     .build();
+    /// ```
+    #[must_use]
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Builds an 'AmneziaSettings'
+    ///
+    /// # Errors
+    ///
+    /// If [`AmneziaSettings`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
+    /// with setting name
+    pub fn build(&self) -> WireguardResult<AmneziaSettings> {
+        let settings = self.fallible_build().unwrap_or_else(|_| unreachable!());
+        settings.validate()?;
+        Ok(settings)
     }
 }
 
@@ -145,15 +286,33 @@ impl AmneziaSettings {
 /// It exports only [`Jc = ..., Jmin = ..., etc`]. To export full interface, use `Interface.to_string()`.
 impl fmt::Display for AmneziaSettings {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        writeln!(f, "Jc = {}", self.jc)?;
-        writeln!(f, "Jmin = {}", self.jmin)?;
-        writeln!(f, "Jmax = {}", self.jmax)?;
-        writeln!(f, "S1 = {}", self.s1)?;
-        writeln!(f, "S2 = {}", self.s2)?;
-        writeln!(f, "H1 = {}", self.h1)?;
-        writeln!(f, "H2 = {}", self.h2)?;
-        writeln!(f, "H3 = {}", self.h3)?;
-        writeln!(f, "H4 = {}", self.h4)?;
+        macro_rules! write_option {
+            ($name:literal, $value:expr) => {
+                if let Some(value) = &$value {
+                    writeln!(f, "{} = {}", $name, value)?;
+                }
+            };
+        }
+
+        write_option!("Jc", self.jc);
+        write_option!("Jmin", self.jmin);
+        write_option!("Jmax", self.jmax);
+
+        write_option!("S1", self.s1);
+        write_option!("S2", self.s2);
+        write_option!("S3", self.s3);
+        write_option!("S4", self.s4);
+
+        write_option!("H1", self.h1);
+        write_option!("H2", self.h2);
+        write_option!("H3", self.h3);
+        write_option!("H4", self.h4);
+
+        write_option!("I1", self.i1);
+        write_option!("I2", self.i2);
+        write_option!("I3", self.i3);
+        write_option!("I4", self.i4);
+        write_option!("I5", self.i5);
 
         Ok(())
     }
