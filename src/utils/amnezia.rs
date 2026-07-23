@@ -18,7 +18,6 @@ macro_rules! assert_return {
 
 /// Inclusive range of H values used by AmneziaWG 2.0.
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 pub struct HRange {
     min: u32,
     max: u32,
@@ -315,5 +314,27 @@ impl fmt::Display for AmneziaSettings {
         write_option!("I5", self.i5);
 
         Ok(())
+    }
+}
+
+#[cfg(feature = "serde")]
+impl Serialize for HRange {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        [self.min, self.max].serialize(serializer)
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<'de> Deserialize<'de> for HRange {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let [min, max] = <[u32; 2]>::deserialize(deserializer)?;
+
+        Ok(Self { min, max })
     }
 }
