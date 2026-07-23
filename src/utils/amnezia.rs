@@ -4,7 +4,7 @@ use std::{convert::Infallible, fmt};
 
 #[cfg(feature = "serde")]
 #[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use super::{WireguardError, WireguardResult};
 
@@ -321,9 +321,9 @@ impl fmt::Display for AmneziaSettings {
 impl Serialize for HRange {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: serde::Serializer,
+        S: Serializer,
     {
-        [self.min, self.max].serialize(serializer)
+        serializer.serialize_str(&format!("{}-{}", self.min, self.max))
     }
 }
 
@@ -331,10 +331,17 @@ impl Serialize for HRange {
 impl<'de> Deserialize<'de> for HRange {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: serde::Deserializer<'de>,
+        D: Deserializer<'de>,
     {
-        let [min, max] = <[u32; 2]>::deserialize(deserializer)?;
+        let s = String::deserialize(deserializer)?;
 
-        Ok(Self { min, max })
+        let (min, max) = s
+            .split_once('-')
+            .ok_or_else(|| serde::de::Error::custom("expected \"min-max\""))?;
+
+        Ok(Self {
+            min: min.parse().map_err(serde::de::Error::custom)?,
+            max: max.parse().map_err(serde::de::Error::custom)?,
+        })
     }
 }
