@@ -130,7 +130,10 @@ pub struct Interface {
     /// The DNS servers to announce to VPN clients via DHCP.
     ///
     /// [Wireguard docs](https://github.com/pirate/wireguard-docs#dns-2)
-    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Vec::is_empty"))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Vec::is_empty")
+    )]
     #[builder(setter(into, strip_option), default)]
     pub dns: Vec<String>,
 
@@ -169,28 +172,40 @@ pub struct Interface {
     /// Commands, that will be executed before the interface is brought up
     ///
     /// [Wireguard docs](https://github.com/pirate/wireguard-docs#preup)
-    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Vec::is_empty"))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Vec::is_empty")
+    )]
     #[builder(setter(into), default)]
     pub pre_up: Vec<String>,
 
     /// Commands, that will be executed before the interface is brought down
     ///
     /// [Wireguard docs](https://github.com/pirate/wireguard-docs#predown)
-    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Vec::is_empty"))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Vec::is_empty")
+    )]
     #[builder(setter(into), default)]
     pub pre_down: Vec<String>,
 
     /// Commands, that will be executed after the interface is brought up
     ///
     /// [Wireguard docs](https://github.com/pirate/wireguard-docs#postup)
-    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Vec::is_empty"))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Vec::is_empty")
+    )]
     #[builder(setter(into), default)]
     pub post_up: Vec<String>,
 
     /// Commands, that will be executed after the interface is brought down
     ///
     /// [Wireguard docs](https://github.com/pirate/wireguard-docs#postdown)
-    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Vec::is_empty"))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Vec::is_empty")
+    )]
     #[builder(setter(into), default)]
     pub post_down: Vec<String>,
 
