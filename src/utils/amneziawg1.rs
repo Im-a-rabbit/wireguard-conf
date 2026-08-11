@@ -15,7 +15,7 @@ macro_rules! assert_return {
     };
 }
 
-/// AmneziaWG obfuscation values.
+/// **AmneziaWG 1.0** obfuscation values.
 ///
 /// - [Documentation](https://github.com/amnezia-vpn/amneziawg-linux-kernel-module?tab=readme-ov-file#configuration)
 #[must_use]

@@ -37,7 +37,7 @@ impl fmt::Display for HRange {
     }
 }
 
-/// AmneziaWG obfuscation values.
+/// **AmneziaWG 2.0** obfuscation values.
 ///
 /// - [Documentation](https://docs.amnezia.org/documentation/amnezia-wg)
 #[must_use]
@@ -49,63 +49,86 @@ pub struct AmneziaSettings {
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(strip_option), default)]
     pub jc: Option<u8>,
+
     /// 64 <= Jmin <= Jmax <= 1024
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(strip_option), default)]
     pub jmin: Option<u16>,
+
     /// 64 <= Jmin <= Jmax <= 1024
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(strip_option), default)]
     pub jmax: Option<u16>,
+
+    /// Init packet length randomization.
+    ///
     /// 0 <= S1 <= 64
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(strip_option), default)]
     pub s1: Option<u8>,
+
+    /// Response packet length randomization.
+    ///
     /// 0 <= S2 <= 64
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(strip_option), default)]
     pub s2: Option<u8>,
+
+    /// Cookie packet length randomization.
+    ///
     /// 0 <= S3 <= 64
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(strip_option), default)]
     pub s3: Option<u8>,
+
+    /// Data packet length randomization.
+    ///
     /// 0 <= S4 <= 32
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(strip_option), default)]
     pub s4: Option<u8>,
+
     /// Random header range for Init packets; H1-H4 ranges must not overlap
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(strip_option), default)]
     pub h1: Option<HRange>,
-    /// Random header range for Init packets; H1-H4 ranges must not overlap
+
+    /// Random header range for Response packets; H1-H4 ranges must not overlap
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(strip_option), default)]
     pub h2: Option<HRange>,
-    /// Random header range for Init packets; H1-H4 ranges must not overlap
+
+    /// Random header range for Cookie packets; H1-H4 ranges must not overlap
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(strip_option), default)]
     pub h3: Option<HRange>,
-    /// Random header range for Init packets; H1-H4 ranges must not overlap
+
+    /// Random header range for Data packets; H1-H4 ranges must not overlap
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(strip_option), default)]
     pub h4: Option<HRange>,
-    /// Custom protocol signature template.
+
+    /// Custom Protocol Signature template for primary packet.
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(into, strip_option), default)]
     pub i1: Option<String>,
-    /// Custom protocol signature template.
+
+    /// Custom Protocol Signature template.
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(into, strip_option), default)]
     pub i2: Option<String>,
-    /// Custom protocol signature template.
+
+    /// Custom Protocol Signature template.
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(into, strip_option), default)]
     pub i3: Option<String>,
-    /// Custom protocol signature template.
+
+    /// Custom Protocol Signature template.
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(into, strip_option), default)]
     pub i4: Option<String>,
-    /// Custom protocol signature template.
+
+    /// Custom Protocol Signature template.
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(into, strip_option), default)]
     pub i5: Option<String>,

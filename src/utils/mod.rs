@@ -5,17 +5,20 @@ mod keys;
 
 use thiserror::Error;
 
-#[cfg(all(feature = "amneziawg-1", feature = "amneziawg-2"))]
+#[cfg(all(feature = "amneziawg-1", feature = "amneziawg-2", not(doc)))]
 compile_error!("Incompatible feature-flags enabled: choose either `amneziawg-1` or `amneziawg-2`");
 
 #[cfg(feature = "amneziawg-1")]
-mod amneziawg1;
+#[cfg_attr(docsrs, doc(cfg(feature = "amneziawg-1")))]
+pub mod amneziawg1;
+
+#[cfg(feature = "amneziawg-2")]
+#[cfg_attr(docsrs, doc(cfg(feature = "amneziawg-2")))]
+pub mod amneziawg2;
+
 #[cfg(feature = "amneziawg-1")]
 #[cfg_attr(docsrs, doc(cfg(feature = "amneziawg-1")))]
 pub use amneziawg1::*;
-
-#[cfg(feature = "amneziawg-2")]
-mod amneziawg2;
 #[cfg(feature = "amneziawg-2")]
 #[cfg_attr(docsrs, doc(cfg(feature = "amneziawg-2")))]
 pub use amneziawg2::*;
