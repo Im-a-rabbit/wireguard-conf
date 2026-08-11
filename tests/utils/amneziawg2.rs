@@ -1,4 +1,5 @@
-#![cfg(feature = "amneziawg")]
+#![cfg(feature = "amneziawg-2")]
+
 use wireguard_conf::prelude::*;
 
 #[test]

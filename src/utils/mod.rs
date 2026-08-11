@@ -1,5 +1,3 @@
-#[cfg(feature = "amneziawg")]
-mod amnezia;
 #[cfg(feature = "serde")]
 mod serde;
 
@@ -7,9 +5,20 @@ mod keys;
 
 use thiserror::Error;
 
-#[cfg(feature = "amneziawg")]
-#[cfg_attr(docsrs, doc(cfg(feature = "amneziawg")))]
-pub use amnezia::*;
+#[cfg(all(feature = "amneziawg-1", feature = "amneziawg-2"))]
+compile_error!("Incompatible feature-flags enabled: choose either `amneziawg-1` or `amneziawg-2`");
+
+#[cfg(feature = "amneziawg-1")]
+mod amneziawg1;
+#[cfg(feature = "amneziawg-1")]
+#[cfg_attr(docsrs, doc(cfg(feature = "amneziawg-1")))]
+pub use amneziawg1::*;
+
+#[cfg(feature = "amneziawg-2")]
+mod amneziawg2;
+#[cfg(feature = "amneziawg-2")]
+#[cfg_attr(docsrs, doc(cfg(feature = "amneziawg-2")))]
+pub use amneziawg2::*;
 
 pub use keys::*;
 
@@ -37,7 +46,7 @@ pub enum WireguardError {
     NoAssignedIP,
 
     /// Error, when some amnezia setting is invalid
-    #[cfg(feature = "amneziawg")]
+    #[cfg(any(feature = "amneziawg-1", feature = "amneziawg-2"))]
     #[error("invalid amnezia setting: {0}")]
     InvalidAmneziaSetting(String),
 }

@@ -23,7 +23,7 @@ pub struct ToInterfaceOptions {
     persistent_keepalive: u16,
 
     /// Option for removing server-only AmneziaWG fields from the generated interface.
-    #[cfg(feature = "amneziawg")]
+    #[cfg(any(feature = "amneziawg-1", feature = "amneziawg-2"))]
     strip_server_data: bool,
 }
 
@@ -212,7 +212,7 @@ impl Peer {
             table: None,
             mtu: None,
 
-            #[cfg(feature = "amneziawg")]
+            #[cfg(any(feature = "amneziawg-1", feature = "amneziawg-2"))]
             amnezia_settings: server_interface.amnezia_settings.clone(),
 
             pre_up: vec![],
@@ -243,7 +243,7 @@ impl Peer {
             client_interface.peers[0].persistent_keepalive = options.persistent_keepalive;
         }
 
-        #[cfg(feature = "amneziawg")]
+        #[cfg(feature = "amneziawg-2")]
         if options.strip_server_data
             && let Some(settings) = &mut client_interface.amnezia_settings
         {

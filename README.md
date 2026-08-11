@@ -46,8 +46,17 @@ println!("{}", peer.to_interface(&interface, ToInterfaceOptions::new()).unwrap()
 
 ### Features
 
-- `amneziawg`: adds support for generating/using [AmneziaWG](https://docs.amnezia.org/documentation/amnezia-wg/) obfuscation values.
-- `serde`: adds implementions of [`serde::Serialize`] and [`serde::Deserialize`] for all structs.
+- `amneziawg-*`: AmneziaWG is a fork of wireguard, that less recognizable by DPI systems by
+   randomizing packet headers with packet sizes.
+
+   These feature flags add support for generating and manually building amnezia settings:
+
+   - `amneziawg`: _alias for `amneziawg-1`_
+   - `amneziawg-1`: adds [AmneziaWG 1.0](https://docs.amnezia.org/documentation/amnezia-wg/) support.
+   - `amneziawg-2`: adds [AmneziaWG 2.0](https://docs.amnezia.org/documentation/amnezia-wg/) support. **(recommended over `amneziawg-1`)**
+   - ~~`amneziawg-3`~~: **WIP** (waiting for offical release)
+
+- `serde`: adds implementions of `serde::Serialize` and `serde::Deserialize` for all structs.
 
 ### Contributing
 
