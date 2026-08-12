@@ -1,3 +1,5 @@
+//! Module for AmneziaWG 1.0
+
 use rand::prelude::*;
 use std::{collections::HashSet, fmt};
 

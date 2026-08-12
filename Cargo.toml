@@ -18,6 +18,8 @@ amneziawg = ["amneziawg-1"]
 amneziawg-1 = []
 amneziawg-2 = []
 
+__amneziawg_internal = ["amneziawg-1", "amneziawg-2"]
+
 serde = ["dep:serde", "either/serde", "ipnet/serde"]
 
 [dependencies]

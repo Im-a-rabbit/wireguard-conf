@@ -1,6 +1,7 @@
 #![cfg(feature = "amneziawg-1")]
 
-use wireguard_conf::prelude::*;
+use wireguard_conf::WireguardError;
+use wireguard_conf::amneziawg1::*;
 
 #[test]
 fn random() {

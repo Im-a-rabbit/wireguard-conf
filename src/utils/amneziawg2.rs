@@ -1,3 +1,5 @@
+//! Module for AmneziaWG 2.0
+
 use derive_builder::Builder;
 use rand::prelude::*;
 use std::{convert::Infallible, fmt};

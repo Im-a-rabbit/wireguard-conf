@@ -5,7 +5,17 @@ mod keys;
 
 use thiserror::Error;
 
-#[cfg(all(feature = "amneziawg-1", feature = "amneziawg-2", not(doc)))]
+// There's a lot of `cfg`, what they basicly do:
+//
+//   1. You cannot enable two or more `amneziawg-*` together
+//   2. Based of what `amneziawg-*` you enabled, required module will be enabled
+//   3. If code builds for documentation, linting or testing, then first check is disabled and AmneziaWG 2.0 is imported as default
+
+#[cfg(all(
+    feature = "amneziawg-1",
+    feature = "amneziawg-2",
+    not(feature = "__amneziawg_internal"),
+))]
 compile_error!("Incompatible feature-flags enabled: choose either `amneziawg-1` or `amneziawg-2`");
 
 #[cfg(feature = "amneziawg-1")]
@@ -16,7 +26,7 @@ pub mod amneziawg1;
 #[cfg_attr(docsrs, doc(cfg(feature = "amneziawg-2")))]
 pub mod amneziawg2;
 
-#[cfg(feature = "amneziawg-1")]
+#[cfg(all(feature = "amneziawg-1", any(doc, not(feature = "__amneziawg_internal"))))]
 #[cfg_attr(docsrs, doc(cfg(feature = "amneziawg-1")))]
 pub use amneziawg1::*;
 #[cfg(feature = "amneziawg-2")]
