@@ -20,18 +20,12 @@ fn tutorial() {
         .post_up([
             "iptables -A FORWARD -i %i -j ACCEPT".to_string(),
             "iptables -A FORWARD -o %i -j ACCEPT".to_string(),
-            format!(
-                "iptables -t nat -A POSTROUTING -o {} -j MASQUERADE",
-                output_interface
-            ),
+            format!("iptables -t nat -A POSTROUTING -o {output_interface} -j MASQUERADE"),
         ])
         .post_down([
             "iptables -D FORWARD -i %i -j ACCEPT".to_string(),
             "iptables -D FORWARD -o %i -j ACCEPT".to_string(),
-            format!(
-                "iptables -t nat -D POSTROUTING -o {} -j MASQUERADE",
-                output_interface
-            ),
+            format!("iptables -t nat -D POSTROUTING -o {output_interface} -j MASQUERADE"),
         ])
         .build();
 
