@@ -1,5 +1,26 @@
 # Migration
 
+## `v1.1.0`
+
+This isn't breaking, but it's recommended to specify AmneziaWG version
+
+Currently `amneziawg` enables `amneziawg-1`, but in next major release this flag (`amneziawg`) will be removed.
+
+Either:
+
+- Change to `amneziawg-1`
+
+  ```patch
+  -wireguard-conf = { version = "1.0.1", features = ["amneziawg"] }
+  +wireguard-conf = { version = "1.1.0", features = ["amneziawg-1"] }
+  ```
+
+- Migrate to `amneziawg-2` (this will break old configs, due to `H` values now being ranged)
+
+  ```toml
+  wireguard-conf = { version = "1.1.0", features = ["amneziawg-2"] }
+  ```
+
 ## `v1.0.0`
 
 First major release brought many changes. Breaking changes are builder structure and `Peer::to_interface` signature.

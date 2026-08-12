@@ -1,3 +1,5 @@
+//! Module for AmneziaWG 1.0
+
 use rand::prelude::*;
 use std::{collections::HashSet, fmt};
 
@@ -15,7 +17,7 @@ macro_rules! assert_return {
     };
 }
 
-/// AmneziaWG obfuscation values.
+/// **AmneziaWG 1.0** obfuscation values.
 ///
 /// - [Documentation](https://github.com/amnezia-vpn/amneziawg-linux-kernel-module?tab=readme-ov-file#configuration)
 #[must_use]

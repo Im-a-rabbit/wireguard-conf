@@ -1,7 +1,7 @@
 use core::fmt;
 
 use base64::prelude::*;
-use rand::RngCore;
+use rand::Rng;
 use x25519_dalek::{PublicKey as XPublicKey, StaticSecret};
 use zeroize::{Zeroize, ZeroizeOnDrop};
 
@@ -36,7 +36,7 @@ use crate::WireguardError;
 /// # Ok(())
 /// # }
 /// ```
-#[derive(Clone, Zeroize, ZeroizeOnDrop)]
+#[derive(Clone, ZeroizeOnDrop)]
 pub struct PrivateKey(StaticSecret);
 
 impl PrivateKey {

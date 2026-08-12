@@ -21,7 +21,7 @@ fn empty_interface() {
             table: None,
             mtu: None,
 
-            #[cfg(feature = "amneziawg")]
+            #[cfg(any(feature = "amneziawg-1", feature = "amneziawg-2"))]
             amnezia_settings: None,
 
             pre_up: vec![],

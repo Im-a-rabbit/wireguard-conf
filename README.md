@@ -46,24 +46,18 @@ println!("{}", peer.to_interface(&interface, ToInterfaceOptions::new()).unwrap()
 
 ### Features
 
-- `amneziawg`: adds support for generating/using [AmneziaWG](https://docs.amnezia.org/documentation/amnezia-wg/) obfuscation values.
-- `serde`: adds implementions of [`serde::Serialize`] and [`serde::Deserialize`] for all structs.
+- `amneziawg-*`: AmneziaWG is a fork of wireguard, that less recognizable by DPI systems by
+  randomizing packet headers with packet sizes.
 
-### Contributing
+  These feature flags add support for generating and manually building amnezia settings:
 
-1. Fork & clone
-2. Install Rust, Cargo and [just](https://just.systems/). 
+  - `amneziawg`: _alias for `amneziawg-1`, this will update in next major release_
+  - `amneziawg-1`: adds [AmneziaWG 1.0](https://docs.amnezia.org/documentation/amnezia-wg/) support.
+  - `amneziawg-2`: adds [AmneziaWG 2.0](https://docs.amnezia.org/documentation/amnezia-wg/) support. **(recommended over `amneziawg-1`)**
+  - ~~`amneziawg-3`~~: **WIP** (waiting for official release)
 
-   Or start nix shell: `direnv allow` or just `nix develop`
-3. Make changes
-4. Format and lint code:
-   ```shell
-   just fmt
-   just lint
-   # or fix automatically: just lint-fix
-   ```
-5. Commit changes (use [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/))
-   ```shell
-   git commit -m "feat: did something"
-   ```
-6. Send ~patches~ PR
+- `serde`: adds implementions of `serde::Serialize` and `serde::Deserialize` for all structs.
+
+## Misc
+
+- [Contributing](./CONTRIBUTING.md)
