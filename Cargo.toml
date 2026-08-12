@@ -6,12 +6,14 @@ keywords = ["wireguard", "amneziawg", "builder", "config"]
 version = "1.0.1"
 edition = "2024"
 
-license = "MIT"
+rust-version = "1.88"
+
+license = "MIT or Apache-2.0"
 readme = "README.md"
 homepage = "https://github.com/idkncc/wireguard-conf"
 repository = "https://github.com/idkncc/wireguard-conf"
 
-exclude = ["tests/", ".github/", "TODO.md", ".gitignore"]
+exclude = ["tests/", ".github/", "CONTRIBUTING.md", "QUICKSTART.md", "CHANGELOG.md", ".gitignore"]
 
 [features]
 amneziawg = ["amneziawg-1"]
@@ -23,7 +25,7 @@ __amneziawg_internal = ["amneziawg-1", "amneziawg-2"]
 serde = ["dep:serde", "either/serde", "ipnet/serde"]
 
 [dependencies]
-ipnet = "2"
+ipnet = "2.12"
 
 # keys
 x25519-dalek = { version = "3.0", features = ["static_secrets", "getrandom"] }
