@@ -4,11 +4,12 @@
 [![docs.rs](https://img.shields.io/docsrs/wireguard-conf)](https://docs.rs/wireguard-conf)
 [![Crates.io Version](https://img.shields.io/crates/v/wireguard-conf)](https://crates.io/crates/wireguard-conf)
 [![Crates.io Total Downloads](https://img.shields.io/crates/d/wireguard-conf)](https://crates.io/crates/wireguard-conf)
+[![Crates.io MSRV](https://img.shields.io/crates/msrv/wireguard-conf)](https://crates.io/crates/wireguard-conf)
 [![Quickstart Tutorial](https://img.shields.io/badge/Quickstart_Tutorial-blue)](./QUICKSTART.md)
 
 Easy to use library for creating wireguard configs.
 
-## Installation
+## Installation & Usage
 
 Install `wireguard-conf`
 
@@ -61,3 +62,4 @@ println!("{}", peer.to_interface(&interface, ToInterfaceOptions::new()).unwrap()
 ## Misc
 
 - [Contributing](./CONTRIBUTING.md)
+- Licensed under either [MIT](./LICENSE-MIT) or [Apache 2.0](./LICENSE-APACHE)

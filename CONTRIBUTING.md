@@ -1,36 +1,52 @@
 # Contributing
 
-## tl;dr
+Don't be a jerk, don't break backward compatibility (unless you really want a major release),
+make useful suggestions and write good code.
 
-Don't be a jerk, don't break backward compatibility (unless you really want a major release) and
-make useful suggestions.
+## Building
 
-1. Fork & clone
-2. Install Rust, Cargo and [just (optional)](https://just.systems/). 
+### Pre-requirements
 
-   Or start nix shell: `direnv allow` or just `nix develop`
-3. Make changes
-4. Format and lint code:
-   ```shell
-   just fmt  # same as `cargo fmt`
-   just lint # same as `cargo clippy --all-features`
+- On systems with [nix](https://nixos.org/):
+  ```
+  direnv allow         # (flakes)
+  # or nix develop .   # (flakes)
+  # or nix-shell .
+  ```
+- On other systems:
 
-   # or fix automatically: just lint-fix
-   ```
-5. Commit changes (use [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/))
-   ```shell
-   git commit -m "feat: did something"
-   ```
-6. Send PR
+  Install Rustup and [just (optional)](https://just.systems/)
 
-## LLM usage
+### Development
 
-Please, don't submit PRs made entirely by LLM..
+Do changes and then:
 
-Invest in your own brain capability, learn and poke around thinks, but don't vibecode.
+- with just:
+  ```
+  just fmt
+  just lint
+  # just lint-fix
+  just test
+  ```
 
-I'm using LLMs **only** to do some dumb tasks (e.g. implement trait same as above), throw some
-ideas during mind-block (e.g. can only think of one solution) or as a fallback to google'ing, if
-problem is obscure.
+- without just:
+  ```
+  cargo fmt
+  cargo clippy --all-features
+  # cargo clippy --all-features --fix --allow-dirty
+  cargo test --all-features
+  ```
 
-If possible, use local LLMs and fallback to some cloud ones.
+## LLM/AI contributions
+
+Same as [servo's](https://book.servo.org/contributing/getting-started#ai-contributions)
+
+> **tl;dr**
+> 
+> Don't contribute code made entirely by LLM.
+>
+> LLM tools can be only used for:
+>   - translating
+>   - assisting in finding bugs (you must verify the output)
+>   - helping to understand codebase (warning same as above)
+>   - code reviewing (same warning, be careful, it's unreliable and noisy)
