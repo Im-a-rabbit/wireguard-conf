@@ -4,7 +4,7 @@
 
 - (propose) Removed `amneziawg` feature
 
-# v1.1.0 (unreleased)
+# v1.1.0
 
 ## New features
 
