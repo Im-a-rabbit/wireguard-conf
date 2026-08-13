@@ -7,8 +7,8 @@ use std::{collections::HashSet, fmt};
 #[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
 use serde::{Deserialize, Serialize};
 
-#[cfg(doc)]
-use crate::Interface;
+#[allow(unused_imports)]
+use super::AmneziaWG;
 use crate::{WireguardError, WireguardResult};
 
 macro_rules! assert_return {
@@ -132,11 +132,13 @@ impl AmneziaWG1 {
     }
 }
 
-/// Implementation of [`fmt::Display`] for exporting AmneziaWG values.
+/// Implements [`fmt::Display`] for exporting AmneziaWG values.
 ///
 /// # Note
 ///
-/// It exports only [`Jc = ..., Jmin = ..., etc`]. To export full interface, use [`Interface::to_string()`].
+/// It exports only Amnezia's obfuscation values (`Jc = ...`, `Jmax = ...`, etc.).
+///
+/// To export full interface, use `Interface::to_string()`.
 impl fmt::Display for AmneziaWG1 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         writeln!(f, "Jc = {}", self.jc)?;

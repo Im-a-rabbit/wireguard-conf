@@ -8,6 +8,8 @@ use std::{convert::Infallible, fmt};
 #[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
+#[allow(unused_imports)]
+use crate::Interface;
 use crate::{WireguardError, WireguardResult};
 
 use super::AmneziaWG;
@@ -181,7 +183,7 @@ impl AmneziaWG2 {
     ///
     /// # Errors
     ///
-    /// If [`AmneziaSettings`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
+    /// If [`AmneziaWG2`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
     /// with setting name
     pub fn validate(&self) -> WireguardResult<()> {
         macro_rules! validate_range {
@@ -248,12 +250,13 @@ impl AmneziaWG2 {
         self.i5 = None;
     }
 
-    /// Create new `AmneziaSettingsBuilder`. Alias for `AmneziaSettingsBuilder::new()`.
+    /// Create new [`AmneziaWG2Builder`].
     ///
     /// ```rust
     /// # use wireguard_conf::prelude::*;
-    /// let amnezia_settings = AmneziaWG::builder_v2() // same as AmneziaWG2::builder()
+    /// let amnezia_settings = AmneziaWG2::builder() // same as AmneziaWG2Builder::new()
     ///     .jc(5)
+    ///     .jmin(12)
     ///     // <snip>
     ///     .build();
     /// ```
@@ -268,7 +271,6 @@ impl AmneziaWG2Builder {
     ///
     /// ```rust
     /// # use wireguard_conf::prelude::*;
-    /// #
     /// let amnezia_settings = AmneziaWG2::builder() // same as AmneziaWG2Builder::new()
     ///     .jc(5)
     ///     .jmin(12)
@@ -281,14 +283,14 @@ impl AmneziaWG2Builder {
     }
 
     /// Finishes builder and builds [`AmneziaWG`] 2.0
-    /// 
+    ///
     /// # Note
     ///
     /// This will return general enum [`AmneziaWG`], NOT inner struct [`AmneziaWG2`]
     ///
     /// # Errors
     ///
-    /// If [`AmneziaSettings`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
+    /// If [`AmneziaWG2`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
     /// with setting name
     pub fn build(&self) -> WireguardResult<AmneziaWG> {
         let settings = self.fallible_build().unwrap_or_else(|_| unreachable!());
@@ -301,7 +303,9 @@ impl AmneziaWG2Builder {
 ///
 /// # Note
 ///
-/// It exports only [`Jc = ..., Jmin = ..., etc`]. To export full interface, use `Interface.to_string()`.
+/// It exports only Amnezia's obfuscation values (`Jc = ...`, `Jmax = ...`, etc.).
+///
+/// To export full interface, use `Interface::to_string()`.
 impl fmt::Display for AmneziaWG2 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         macro_rules! write_option {

@@ -8,6 +8,8 @@ use std::fmt;
 pub use ver1::*;
 pub use ver2::*;
 
+#[allow(unused_imports)]
+use crate::WireguardError;
 use crate::WireguardResult;
 
 /// [AmneziaWG](https://docs.amnezia.org/documentation/amnezia-wg) obfuscation values. By using this
@@ -102,7 +104,7 @@ impl AmneziaWG {
     ///
     /// # Errors
     ///
-    /// If [`AmneziaSettings`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
+    /// If [`AmneziaWG`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
     /// with setting name
     pub fn validate(&self) -> WireguardResult<()> {
         match self {
@@ -129,7 +131,7 @@ impl AmneziaWG {
 ///
 /// It exports only `Jc`, `Jmin`, etc.
 ///
-/// To export full interface, use [`Interface::to_string()`].
+/// To export full interface, use `Interface::to_string()`.
 impl fmt::Display for AmneziaWG {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {

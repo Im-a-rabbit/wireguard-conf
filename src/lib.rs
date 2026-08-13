@@ -4,7 +4,7 @@
 //! - Use [`Interface`]'s and [`Peer`]'s [`std::fmt::Display`] for exporting  Wireguard config (`.to_string()`, [`write!()`], etc).
 //! - Use [`PrivateKey`], [`PublicKey`] and [`PresharedKey`] for generating, importing and
 //!   exporting keys.
-//! - Use [`AmneziaSettings`] for generating/using AmneziaWG obfuscation values.
+//! - Use [`AmneziaWG`] to generate and use AmneziaWG obfuscation values.
 //!
 //! # Features
 //!
