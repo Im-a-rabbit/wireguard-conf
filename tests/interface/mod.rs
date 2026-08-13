@@ -21,7 +21,7 @@ fn empty_interface() {
             table: None,
             mtu: None,
 
-            #[cfg(any(feature = "amneziawg-1", feature = "amneziawg-2"))]
+            #[cfg(feature = "amneziawg")]
             amnezia_settings: None,
 
             pre_up: vec![],
@@ -137,7 +137,7 @@ fn mtu() {
 #[cfg(feature = "amneziawg")]
 #[test]
 fn amnezia_settings() {
-    let amnezia_settings = AmneziaSettings::random();
+    let amnezia_settings = AmneziaWG::random_v2();
 
     let interface = InterfaceBuilder::new()
         .amnezia_settings(amnezia_settings.clone())
