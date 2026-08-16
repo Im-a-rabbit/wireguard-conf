@@ -45,6 +45,23 @@ impl fmt::Display for HRange {
 
 /// **AmneziaWG 2.0** obfuscation values.
 ///
+/// If you need to generate, build, validate or use these settings in interface, **use [`AmneziaWG`]
+/// enum instead**.
+///
+/// ```
+/// # use wireguard_conf::prelude::*;
+/// let settings = AmneziaWG::random_v2();
+/// let settings = AmneziaWG::builder_v2()
+///     .jc(9)
+///     // <snip>
+///     .build()
+///     .expect("invalid settings");
+///
+/// _ = Interface::builder()
+///     .amnezia_settings(settings)
+///     .build();
+/// ```
+///
 /// - [Documentation](https://docs.amnezia.org/documentation/amnezia-wg)
 #[must_use]
 #[derive(Clone, Debug, PartialEq, Default, Builder)]
