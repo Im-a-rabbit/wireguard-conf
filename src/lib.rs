@@ -46,9 +46,10 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(docsrs, doc(auto_cfg))]
 
+mod error;
+mod keys;
 mod macros;
 mod models;
-mod utils;
 
 #[cfg(feature = "amneziawg")]
 mod amneziawg;
@@ -59,5 +60,6 @@ pub mod prelude;
 
 pub use ipnet;
 
+pub use error::*;
+pub use keys::*;
 pub use models::*;
-pub use utils::*;
