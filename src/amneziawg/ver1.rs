@@ -21,6 +21,18 @@ macro_rules! assert_return {
 
 /// **AmneziaWG 1.0** obfuscation values.
 ///
+/// If you need to generate, build, validate or use these settings in interface, **use [`AmneziaWG`]
+/// enum instead**.
+///
+/// ```
+/// # use wireguard_conf::prelude::*;
+/// let settings = AmneziaWG::random_v1();
+///
+/// _ = Interface::builder()
+///     .amnezia_settings(settings)
+///     .build();
+/// ```
+///
 /// - [Documentation](https://github.com/amnezia-vpn/amneziawg-linux-kernel-module?tab=readme-ov-file#configuration)
 #[must_use]
 #[derive(Clone, Debug, PartialEq)]

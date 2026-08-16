@@ -13,13 +13,14 @@ build:
 
 alias doc := docs
 docs:
-    cargo doc {{CFLAGS}}
-docs-open:
-    cargo doc {{CFLAGS}} --open
+    cargo doc --all-features {{CFLAGS}}
+
+docs-rs:
+    RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --no-deps --all-features {{CFLAGS}}
 
 fmt:
     cargo fmt {{CFLAGS}}
 lint:
-    cargo clippy --all-features {{CFLAGS}}
+    cargo clippy --all-targets --all-features {{CFLAGS}}
 lint-fix:
-    cargo clippy --all-features --fix --allow-dirty {{CFLAGS}}
+    cargo clippy --all-targets --all-features --fix --allow-dirty {{CFLAGS}}
