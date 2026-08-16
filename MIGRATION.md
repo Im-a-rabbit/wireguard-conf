@@ -1,5 +1,31 @@
 # Migration
 
+## `v2.0.0`
+
+### AmneziaWG
+
+If you use AmneziaWG, now there's `AmneziaWG` enum, that contains `V1` and `V2` for **AmneziaWG 1.0** and **AmneziaWG 2.0** respectively.
+
+```diff
+-// old:
+-let amneziawg = AmneziaSettings::random();
+-let amneziawg = AmneziaSettings { ... };
++// new:
++let amneziawg = AmneziaWG::random_v1();
++
++let amneziawg = AmneziaWG::random_v2();
++let amneziawg = AmneziaWG::builder_v2()
++    .jc(10)
++    .jmin(2)
++    // <snip>
++    .build();
++let amneziawg = AmneziaWG::empty_v2();
+ 
+ let interface = InterfaceBuilder::new()
+     .amnezia_settings(amneziawg)
+     .build();
+```
+
 ## `v1.0.0`
 
 First major release brought many changes. Breaking changes are builder structure and `Peer::to_interface` signature.
