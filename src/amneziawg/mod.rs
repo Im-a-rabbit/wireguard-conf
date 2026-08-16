@@ -28,6 +28,7 @@ use crate::WireguardResult;
 /// ```
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", serde(untagged))]
 pub enum AmneziaWG {
     /// AmneziaWG 1.0
     V1(AmneziaWG1),
