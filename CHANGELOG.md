@@ -2,8 +2,9 @@
 
 ## Breaking changes
 
-- Rewritten how AmneziaWG values are handled. Now `amneziawg` feature has both versions of
-  AmneziaWG.
+- [Rewritten how AmneziaWG values are handled](./MIGRATION.md).
+
+  Now `amneziawg` feature has both versions of AmneziaWG.
 
 # v1.1.0
 
