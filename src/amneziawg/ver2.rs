@@ -8,7 +8,11 @@ use std::{convert::Infallible, fmt};
 #[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use super::{WireguardError, WireguardResult};
+#[allow(unused_imports)]
+use crate::Interface;
+use crate::{WireguardError, WireguardResult};
+
+use super::AmneziaWG;
 
 macro_rules! assert_return {
     ($test:expr, $err:expr) => {
@@ -43,10 +47,10 @@ impl fmt::Display for HRange {
 ///
 /// - [Documentation](https://docs.amnezia.org/documentation/amnezia-wg)
 #[must_use]
-#[derive(Clone, Debug, PartialEq, Builder)]
+#[derive(Clone, Debug, PartialEq, Default, Builder)]
 #[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 #[builder(build_fn(private, name = "fallible_build", error = "Infallible"))]
-pub struct AmneziaSettings {
+pub struct AmneziaWG2 {
     /// 0 ≤ Jc ≤ 10
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     #[builder(setter(strip_option), default)]
@@ -137,22 +141,8 @@ pub struct AmneziaSettings {
 }
 
 /// Methods
-impl AmneziaSettings {
-    /// Generate [`AmneziaSettings`] with randomized values, based of recommended ranges or values.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use wireguard_conf::prelude::*;
-    ///
-    /// let settings = AmneziaSettings::random();
-    ///
-    /// _ = InterfaceBuilder::new()
-    ///    // <snip>
-    ///    .amnezia_settings(settings)
-    ///    .build();
-    /// ```
-    pub fn random() -> Self {
+impl AmneziaWG2 {
+    pub(super) fn random() -> AmneziaWG {
         let mut rng = rand::rng();
 
         let mut min = rng.random_range(0..=3_000_000);
@@ -170,7 +160,7 @@ impl AmneziaSettings {
         min += width + rng.random_range(1..=1000);
         let width = rng.random_range(30_000..=65_535);
         let h4 = HRange::new(min, min + width);
-        AmneziaSettings::builder()
+        AmneziaWG2::builder()
             .jc(rng.random_range(4..=10))
             .jmin(rng.random_range(64..256))
             .jmax(rng.random_range(768..=1024))
@@ -187,11 +177,13 @@ impl AmneziaSettings {
             .unwrap_or_else(|_| unreachable!())
     }
 
-    /// Validates [`AmneziaSettings`].
+    /// Validates [`AmneziaWG2`].
+    ///
+    /// **Alternative and recommended way to validate is [`AmneziaWG::validate()`].**
     ///
     /// # Errors
     ///
-    /// If [`AmneziaSettings`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
+    /// If [`AmneziaWG2`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
     /// with setting name
     pub fn validate(&self) -> WireguardResult<()> {
         macro_rules! validate_range {
@@ -258,48 +250,54 @@ impl AmneziaSettings {
         self.i5 = None;
     }
 
-    /// Create new `AmneziaSettingsBuilder`. Alias for `AmneziaSettingsBuilder::new()`.
+    /// Create new [`AmneziaWG2Builder`].
     ///
     /// ```rust
     /// # use wireguard_conf::prelude::*;
-    /// #
-    /// let amnezia_settings = AmneziaSettings::builder()
+    /// let amnezia_settings = AmneziaWG2::builder() // same as AmneziaWG2Builder::new()
     ///     .jc(5)
+    ///     .jmin(65)
     ///     // <snip>
     ///     .build();
+    /// # assert!(amnezia_settings.is_ok())
     /// ```
     #[must_use]
-    pub fn builder() -> AmneziaSettingsBuilder {
-        AmneziaSettingsBuilder::default()
+    pub fn builder() -> AmneziaWG2Builder {
+        AmneziaWG2Builder::default()
     }
 }
 
-impl AmneziaSettingsBuilder {
-    /// Create new `AmneziaSettingsBuilder`.
+impl AmneziaWG2Builder {
+    /// Create new builder for `AmneziaWG2`.
     ///
     /// ```rust
     /// # use wireguard_conf::prelude::*;
-    /// #
-    /// let amnezia_settings = AmneziaSettingsBuilder::new()
+    /// let amnezia_settings = AmneziaWG2::builder() // same as AmneziaWG2Builder::new()
     ///     .jc(5)
+    ///     .jmin(65)
     ///     // <snip>
     ///     .build();
+    /// # assert!(amnezia_settings.is_ok())
     /// ```
     #[must_use]
     pub fn new() -> Self {
         Self::default()
     }
 
-    /// Builds an 'AmneziaSettings'
+    /// Finishes builder and builds [`AmneziaWG`] 2.0
+    ///
+    /// # Note
+    ///
+    /// This will return general enum [`AmneziaWG`], NOT inner struct [`AmneziaWG2`]
     ///
     /// # Errors
     ///
-    /// If [`AmneziaSettings`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
+    /// If [`AmneziaWG2`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
     /// with setting name
-    pub fn build(&self) -> WireguardResult<AmneziaSettings> {
+    pub fn build(&self) -> WireguardResult<AmneziaWG> {
         let settings = self.fallible_build().unwrap_or_else(|_| unreachable!());
         settings.validate()?;
-        Ok(settings)
+        Ok(AmneziaWG::V2(settings))
     }
 }
 
@@ -307,8 +305,10 @@ impl AmneziaSettingsBuilder {
 ///
 /// # Note
 ///
-/// It exports only [`Jc = ..., Jmin = ..., etc`]. To export full interface, use `Interface.to_string()`.
-impl fmt::Display for AmneziaSettings {
+/// It exports only Amnezia's obfuscation values (`Jc = ...`, `Jmax = ...`, etc.).
+///
+/// To export full interface, use `Interface::to_string()`.
+impl fmt::Display for AmneziaWG2 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         macro_rules! write_option {
             ($name:literal, $value:expr) => {

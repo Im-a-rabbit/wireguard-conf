@@ -7,7 +7,9 @@ use std::{collections::HashSet, fmt};
 #[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
 use serde::{Deserialize, Serialize};
 
-use super::{WireguardError, WireguardResult};
+#[allow(unused_imports)]
+use super::AmneziaWG;
+use crate::{WireguardError, WireguardResult};
 
 macro_rules! assert_return {
     ($test:expr, $err:expr) => {
@@ -23,7 +25,7 @@ macro_rules! assert_return {
 #[must_use]
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
-pub struct AmneziaSettings {
+pub struct AmneziaWG1 {
     /// 1 ≤ Jc ≤ 128; recommended range is from 3 to 10 inclusive
     pub jc: usize,
 
@@ -46,22 +48,10 @@ pub struct AmneziaSettings {
     pub h4: usize,
 }
 
-/// Methods
-impl AmneziaSettings {
-    /// Generate [`AmneziaSettings`] with randomized values, based of recommended ranges or values.
+impl AmneziaWG1 {
+    /// Generate [`AmneziaWG1`] with randomized values, based of recommended ranges or values.
     ///
-    /// # Examples
-    ///
-    /// ```
-    /// use wireguard_conf::prelude::*;
-    ///
-    /// let settings = AmneziaSettings::random();
-    ///
-    /// _ = InterfaceBuilder::new()
-    ///    // <snip>
-    ///    .amnezia_settings(settings)
-    ///    .build();
-    /// ```
+    /// Alternative and recommended way to generate is [`AmneziaWG::random_v1()`].
     pub fn random() -> Self {
         let mut rng = rand::rng();
 
@@ -97,11 +87,13 @@ impl AmneziaSettings {
         }
     }
 
-    /// Validates [`AmneziaSettings`].
+    /// Validates [`AmneziaWG1`].
+    ///
+    /// **Alternative and recommended way to validate is [`AmneziaWG::validate()`].**
     ///
     /// # Errors
     ///
-    /// If [`AmneziaSettings`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
+    /// If [`AmneziaWG1`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
     /// with setting name
     pub fn validate(&self) -> WireguardResult<()> {
         assert_return!(
@@ -144,8 +136,10 @@ impl AmneziaSettings {
 ///
 /// # Note
 ///
-/// It exports only [`Jc = ..., Jmin = ..., etc`]. To export full interface, use `Interface.to_string()`.
-impl fmt::Display for AmneziaSettings {
+/// It exports only Amnezia's obfuscation values (`Jc = ...`, `Jmax = ...`, etc.).
+///
+/// To export full interface, use `Interface::to_string()`.
+impl fmt::Display for AmneziaWG1 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         writeln!(f, "Jc = {}", self.jc)?;
         writeln!(f, "Jmin = {}", self.jmin)?;

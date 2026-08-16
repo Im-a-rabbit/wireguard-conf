@@ -4,20 +4,16 @@
 //! - Use [`Interface`]'s and [`Peer`]'s [`std::fmt::Display`] for exporting  Wireguard config (`.to_string()`, [`write!()`], etc).
 //! - Use [`PrivateKey`], [`PublicKey`] and [`PresharedKey`] for generating, importing and
 //!   exporting keys.
-//! - Use [`AmneziaSettings`] for generating/using AmneziaWG obfuscation values.
+//! - Use [`AmneziaWG`] to generate and use AmneziaWG obfuscation values.
 //!
 //! # Features
 //!
-//! - `amneziawg-*`: AmneziaWG is a fork of wireguard, that less recognizable by DPI systems by
-//!   randomizing packet headers with packet sizes.
-//! 
-//!   These feature flags add support for generating and manually building amnezia settings:
-//! 
-//!   - `amneziawg`: _alias for `amneziawg-1`, this will update in next major release_
-//!   - `amneziawg-1`: adds [AmneziaWG 1.0](https://docs.amnezia.org/documentation/amnezia-wg/) support.
-//!   - `amneziawg-2`: adds [AmneziaWG 2.0](https://docs.amnezia.org/documentation/amnezia-wg/) support. **(recommended over `amneziawg-1`)**
-//!   - ~~`amneziawg-3`~~: **WIP** (waiting for official release)
-//! 
+//! - `amneziawg`: adds support for generating and manually building amnezia settings via
+//!   [`AmneziaWG`] enum.
+//!
+//!   > **AmneziaWG** is a fork of wireguard, that less recognizable by DPI systems by
+//!   > randomizing packet headers with packet sizes.
+//!
 //! - `serde`: adds implementions of [`serde::Serialize`] and [`serde::Deserialize`] for all structs.
 //!
 //! # Example
@@ -45,13 +41,19 @@
 //! ```
 
 #![warn(clippy::pedantic)]
-#![allow(clippy::doc_markdown)]
 #![warn(missing_docs)]
+#![allow(clippy::doc_markdown)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
+#![cfg_attr(docsrs, doc(auto_cfg))]
 
 mod macros;
 mod models;
 mod utils;
+
+#[cfg(feature = "amneziawg")]
+mod amneziawg;
+#[cfg(feature = "amneziawg")]
+pub use amneziawg::*;
 
 pub mod prelude;
 

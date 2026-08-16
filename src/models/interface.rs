@@ -163,14 +163,10 @@ pub struct Interface {
 
     /// AmneziaWG obfuscation values.
     ///
-    /// [AmneziaWG Docs](https://github.com/amnezia-vpn/amneziawg-linux-kernel-module?tab=readme-ov-file#configuration)
-    #[cfg(any(feature = "amneziawg-1", feature = "amneziawg-2"))]
-    #[cfg_attr(
-        docsrs,
-        doc(cfg(any(feature = "amneziawg-1", feature = "amneziawg-2")))
-    )]
+    /// [AmneziaWG Docs](https://docs.amnezia.org/documentation/amnezia-wg)
+    #[cfg(feature = "amneziawg")]
     #[builder(setter(strip_option), default)]
-    pub amnezia_settings: Option<AmneziaSettings>,
+    pub amnezia_settings: Option<AmneziaWG>,
 
     /// Commands, that will be executed before the interface is brought up
     ///

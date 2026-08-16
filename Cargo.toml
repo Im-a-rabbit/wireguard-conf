@@ -16,12 +16,7 @@ repository = "https://github.com/idkncc/wireguard-conf"
 exclude = ["tests/", ".github/", "CONTRIBUTING.md", "QUICKSTART.md", "CHANGELOG.md", ".gitignore"]
 
 [features]
-amneziawg = ["amneziawg-1"]
-amneziawg-1 = []
-amneziawg-2 = []
-
-__amneziawg_internal = ["amneziawg-1", "amneziawg-2"]
-
+amneziawg = []
 serde = ["dep:serde", "either/serde", "ipnet/serde"]
 
 [dependencies]

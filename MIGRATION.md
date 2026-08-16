@@ -1,25 +1,30 @@
 # Migration
 
-## `v1.1.0`
+## `v2.0.0`
 
-This isn't breaking, but it's recommended to specify AmneziaWG version
+### AmneziaWG
 
-Currently `amneziawg` enables `amneziawg-1`, but in next major release this flag (`amneziawg`) will be removed.
+If you use AmneziaWG, now there's `AmneziaWG` enum, that contains `V1` and `V2` for **AmneziaWG 1.0** and **AmneziaWG 2.0** respectively.
 
-Either:
-
-- Change to `amneziawg-1`
-
-  ```patch
-  -wireguard-conf = { version = "1.0.1", features = ["amneziawg"] }
-  +wireguard-conf = { version = "1.1.0", features = ["amneziawg-1"] }
-  ```
-
-- Migrate to `amneziawg-2` (this will break old configs, due to `H` values now being ranged)
-
-  ```toml
-  wireguard-conf = { version = "1.1.0", features = ["amneziawg-2"] }
-  ```
+```diff
+-// old:
+-let amneziawg = AmneziaSettings::random();
+-let amneziawg = AmneziaSettings { ... };
++// new:
++let amneziawg = AmneziaWG::random_v1();
++
++let amneziawg = AmneziaWG::random_v2();
++let amneziawg = AmneziaWG::builder_v2()
++    .jc(5)
++    .jmin(65)
++    // <snip>
++    .build();
++let amneziawg = AmneziaWG::empty_v2();
+ 
+ let interface = InterfaceBuilder::new()
+     .amnezia_settings(amneziawg)
+     .build();
+```
 
 ## `v1.0.0`
 
