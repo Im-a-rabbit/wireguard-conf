@@ -15,8 +15,8 @@ If you use AmneziaWG, now there's `AmneziaWG` enum, that contains `V1` and `V2` 
 +
 +let amneziawg = AmneziaWG::random_v2();
 +let amneziawg = AmneziaWG::builder_v2()
-+    .jc(10)
-+    .jmin(2)
++    .jc(5)
++    .jmin(65)
 +    // <snip>
 +    .build();
 +let amneziawg = AmneziaWG::empty_v2();

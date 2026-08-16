@@ -256,9 +256,10 @@ impl AmneziaWG2 {
     /// # use wireguard_conf::prelude::*;
     /// let amnezia_settings = AmneziaWG2::builder() // same as AmneziaWG2Builder::new()
     ///     .jc(5)
-    ///     .jmin(12)
+    ///     .jmin(65)
     ///     // <snip>
     ///     .build();
+    /// # assert!(amnezia_settings.is_ok())
     /// ```
     #[must_use]
     pub fn builder() -> AmneziaWG2Builder {
@@ -273,9 +274,10 @@ impl AmneziaWG2Builder {
     /// # use wireguard_conf::prelude::*;
     /// let amnezia_settings = AmneziaWG2::builder() // same as AmneziaWG2Builder::new()
     ///     .jc(5)
-    ///     .jmin(12)
+    ///     .jmin(65)
     ///     // <snip>
     ///     .build();
+    /// # assert!(amnezia_settings.is_ok())
     /// ```
     #[must_use]
     pub fn new() -> Self {
