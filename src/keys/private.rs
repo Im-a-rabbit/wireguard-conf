@@ -12,7 +12,7 @@ use crate::WireguardError;
 ///
 /// # Implements
 ///
-/// - Implements [`Zeroize`] and [`ZeroizeOnDrop`] for clearing secrets from memory.
+/// - Implements [`ZeroizeOnDrop`] for clearing secrets from memory.
 /// - Implements [`TryFrom<&str>`] or [`TryFrom<String>`] for importing key from Base64 format.
 /// - Implements [`fmt::Display`] for exporting key in Wireguard's format.
 /// - Implements [`fmt::Debug`].
