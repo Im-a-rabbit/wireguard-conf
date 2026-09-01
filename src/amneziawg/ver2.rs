@@ -208,7 +208,7 @@ impl AmneziaWG2 {
                 if let Some(value) = self.$field {
                     assert_return!(
                         $range.contains(&value),
-                        WireguardError::InvalidAmneziaSetting($name.to_string())
+                        WireguardError::InvalidAmneziaSetting($name)
                     );
                 }
             };
@@ -216,10 +216,7 @@ impl AmneziaWG2 {
         macro_rules! validate {
             ($field:ident, $name:literal, $expr:expr) => {
                 if let Some($field) = &self.$field {
-                    assert_return!(
-                        $expr,
-                        WireguardError::InvalidAmneziaSetting($name.to_string())
-                    );
+                    assert_return!($expr, WireguardError::InvalidAmneziaSetting($name));
                 }
             };
         }
@@ -230,7 +227,7 @@ impl AmneziaWG2 {
         if let (Some(jmin), Some(jmax)) = (self.jmin, self.jmax) {
             assert_return!(
                 jmin < jmax,
-                WireguardError::InvalidAmneziaSetting("Jmin >= Jmax".to_string())
+                WireguardError::InvalidAmneziaSetting("Jmin >= Jmax")
             );
         }
         validate_range!(s1 in 0..=64, "S1");
@@ -249,7 +246,7 @@ impl AmneziaWG2 {
         ranges.sort();
         assert_return!(
             ranges.windows(2).all(|p| p[0].max < p[1].min),
-            WireguardError::InvalidAmneziaSetting("H ranges overlap".to_string())
+            WireguardError::InvalidAmneziaSetting("H ranges overlap")
         );
 
         Ok(())

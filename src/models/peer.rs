@@ -271,7 +271,7 @@ impl fmt::Display for Peer {
             "AllowedIPs = {}",
             self.allowed_ips
                 .iter()
-                .map(std::string::ToString::to_string)
+                .map(|a| IpNet::new_assert(a.network(), a.prefix_len()).to_string())
                 .collect::<Vec<String>>()
                 .join(",")
         )?;

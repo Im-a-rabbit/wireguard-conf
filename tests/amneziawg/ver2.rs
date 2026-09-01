@@ -22,7 +22,7 @@ fn validate_jc() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting("Jc".to_string()))
+        Err(WireguardError::InvalidAmneziaSetting("Jc"))
     );
 }
 
@@ -39,7 +39,7 @@ fn validate_jmin() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting("Jmin".to_string()))
+        Err(WireguardError::InvalidAmneziaSetting("Jmin"))
     );
 
     match settings {
@@ -51,7 +51,7 @@ fn validate_jmin() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting("Jmin".to_string()))
+        Err(WireguardError::InvalidAmneziaSetting("Jmin"))
     );
 }
 
@@ -68,7 +68,7 @@ fn validate_jmax() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting("Jmax".to_string()))
+        Err(WireguardError::InvalidAmneziaSetting("Jmax"))
     );
 
     match settings {
@@ -80,7 +80,7 @@ fn validate_jmax() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting("Jmax".to_string()))
+        Err(WireguardError::InvalidAmneziaSetting("Jmax"))
     );
 }
 
@@ -98,9 +98,7 @@ fn validate_jmin_jmax() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting(
-            "Jmin >= Jmax".to_string()
-        ))
+        Err(WireguardError::InvalidAmneziaSetting("Jmin >= Jmax"))
     );
 }
 
@@ -117,7 +115,7 @@ fn validate_s1() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting("S1".to_string()))
+        Err(WireguardError::InvalidAmneziaSetting("S1"))
     );
 }
 
@@ -134,7 +132,7 @@ fn validate_s2() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting("S2".to_string()))
+        Err(WireguardError::InvalidAmneziaSetting("S2"))
     );
 }
 
@@ -151,7 +149,7 @@ fn validate_s3() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting("S3".to_string()))
+        Err(WireguardError::InvalidAmneziaSetting("S3"))
     );
 }
 
@@ -168,7 +166,7 @@ fn validate_s4() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting("S4".to_string()))
+        Err(WireguardError::InvalidAmneziaSetting("S4"))
     );
 }
 
@@ -185,7 +183,7 @@ fn validate_h1() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting("H1".to_string()))
+        Err(WireguardError::InvalidAmneziaSetting("H1"))
     );
 }
 
@@ -202,7 +200,7 @@ fn validate_h2() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting("H2".to_string()))
+        Err(WireguardError::InvalidAmneziaSetting("H2"))
     );
 }
 
@@ -219,7 +217,7 @@ fn validate_h3() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting("H3".to_string()))
+        Err(WireguardError::InvalidAmneziaSetting("H3"))
     );
 }
 
@@ -236,7 +234,7 @@ fn validate_h4() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting("H4".to_string()))
+        Err(WireguardError::InvalidAmneziaSetting("H4"))
     );
 }
 
@@ -256,8 +254,6 @@ fn validate_h_overlap() {
 
     assert_eq!(
         settings.validate(),
-        Err(WireguardError::InvalidAmneziaSetting(
-            "H ranges overlap".to_string()
-        ))
+        Err(WireguardError::InvalidAmneziaSetting("H ranges overlap"))
     );
 }

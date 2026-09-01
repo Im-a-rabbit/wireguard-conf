@@ -1,5 +1,6 @@
 mod ver1;
 mod ver2;
+mod ver3;
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -7,6 +8,7 @@ use std::fmt;
 
 pub use ver1::*;
 pub use ver2::*;
+pub use ver3::*;
 
 #[allow(unused_imports)]
 use crate::WireguardError;
@@ -35,6 +37,9 @@ pub enum AmneziaWG {
 
     /// AmneziaWG 2.0
     V2(AmneziaWG2),
+
+    /// AmneziaWG 3.1
+    V3(AmneziaWG3),
 }
 
 impl AmneziaWG {
@@ -94,6 +99,42 @@ impl AmneziaWG {
         AmneziaWG2::builder()
     }
 
+    /// Generate random recommended settings for **AmneziaWG 3.1**.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use wireguard_conf::prelude::*;
+    ///
+    /// let settings = AmneziaWG::random_v3();
+    ///
+    /// _ = InterfaceBuilder::new()
+    ///    // <snip>
+    ///    .amnezia_settings(settings)
+    ///    .build();
+    /// ```
+    #[inline]
+    #[must_use]
+    pub fn random_v3() -> Self {
+        AmneziaWG3::random()
+    }
+
+    /// Alias for `AmneziaWG::builder_v3().build()`
+    #[inline]
+    #[must_use]
+    pub fn empty_v3() -> Self {
+        Self::V3(AmneziaWG3::default())
+    }
+
+    /// Create new [`AmneziaWG3Builder`].
+    ///
+    /// This function is an alias for [`AmneziaWG3::builder()`].
+    #[inline]
+    #[must_use]
+    pub fn builder_v3() -> AmneziaWG3Builder {
+        AmneziaWG3::builder()
+    }
+
     /// Validates [`AmneziaWG`] values.
     ///
     /// ```
@@ -111,6 +152,7 @@ impl AmneziaWG {
         match self {
             AmneziaWG::V1(settings) => settings.validate(),
             AmneziaWG::V2(settings) => settings.validate(),
+            AmneziaWG::V3(settings) => settings.validate(),
         }
     }
 
@@ -118,10 +160,22 @@ impl AmneziaWG {
     ///
     /// This is intended for generating client configuration files, where
     /// server-specific fields (such as I1-I5) must not be included.
+    // WARN: Есть некоторая вероятность, что в прошлый раз я неправильно
+    // прочитал документацию, и перепутал сервер и клиент местами.
     pub fn strip_server_data(&mut self) {
-        match self {
-            AmneziaWG::V1(_) => {}
-            AmneziaWG::V2(settings) => settings.strip_server_data(),
+        if let AmneziaWG::V2(settings) = self {
+            settings.strip_server_data();
+        }
+    }
+
+    /// Removes AmneziaWG settings that are not required for the server.
+    ///
+    /// This is intended for generating server configuration, where
+    /// some fields designed to confuse DPI may not be included (e.g., I1-I5).
+    // TODO: Стоит добавить обертку в [`Interface`].
+    pub fn strip_client_data(&mut self) {
+        if let AmneziaWG::V3(settings) = self {
+            settings.strip_client_data();
         }
     }
 }
@@ -138,6 +192,7 @@ impl fmt::Display for AmneziaWG {
         match self {
             AmneziaWG::V1(settings) => settings.fmt(f),
             AmneziaWG::V2(settings) => settings.fmt(f),
+            AmneziaWG::V3(settings) => settings.fmt(f),
         }
     }
 }
